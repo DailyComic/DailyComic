@@ -6,6 +6,6 @@
 
         public string Url { get; set; }
 
-        public string PlatformName { get; set; }
+        public IntegrationPlatform IntegrationPlatform { get; set; }
     }
 }
