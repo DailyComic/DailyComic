@@ -40,11 +40,12 @@ namespace DailyComic.Dilbert
 
             if (container != null)
             {
-                ComicStrip comic = new ComicStrip()
+                ComicStrip comic = new ComicStrip(ComicName.Dilbert)
                 {
                     ImageUrl = container.Attributes["data-image"]?.Value,
                     Title = container.Attributes["data-title"]?.Value,
                     PageUrl = container.Attributes["data-url"]?.Value,
+                    ComicId = container.Attributes["data-id"]?.Value,
                     Author = container.Attributes["data-creator"]?.Value,
                     Tags = container.Attributes["data-tags"]?.Value?.Split(","),
                     Date = container.Attributes["data-date"]?.Value

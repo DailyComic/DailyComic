@@ -1,17 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DailyComic.Contracts;
 using DailyComic.Dilbert;
+using DailyComic.Integrations.Teams;
 using DailyComic.Model;
 using DailyComic.Subscriptions.AzureStorage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 
-namespace DailyComic.Func.Dilbert
+namespace DailyComic.AzureFunctions
 {
     public class RandomDilbert
     {
@@ -23,6 +24,7 @@ namespace DailyComic.Func.Dilbert
         {
             this.retriever = new DilbertRetriever();
             this.subscriberProvider = new AzureStorageSubscriptionController();
+            this.pusher = new ComicPusher();
         }
 
         [FunctionName("RandomDilbert")]
@@ -33,11 +35,27 @@ namespace DailyComic.Func.Dilbert
 
             ComicStrip comic = await this.retriever.GetRandomComic();
 
-            var subscriptions = subscriberProvider.GetSubscribers(SubscriptionName.RandomDilbert);
+            IEnumerable<SubscriptionSettings> subscriptions = await subscriberProvider.GetSubscribers(SubscriptionName.RandomDilbert);
 
-            await this.pusher.Push(comic);
+            await this.pusher.Push(comic, subscriptions);
 
             return new OkResult();
+        }
+    }
+
+    public class ComicPusher : IComicPusher
+    {
+        public async Task Push(ComicStrip comic, IEnumerable<SubscriptionSettings> subscriptionSettingsEnumerable)
+        {
+            TeamsIntegration integration = new TeamsIntegration(comic);
+
+            var tasks = new List<Task>();
+            foreach (SubscriptionSettings subscriptionSettings in subscriptionSettingsEnumerable)
+            {
+                tasks.Add(integration.SendComicTo(subscriptionSettings));  
+            }
+
+            await Task.WhenAll(tasks);
         }
     }
 }

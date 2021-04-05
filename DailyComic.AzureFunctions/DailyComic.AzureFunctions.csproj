@@ -11,7 +11,8 @@
   <ItemGroup>
     <ProjectReference Include="..\DailyComic.Contracts\DailyComic.Contracts.csproj" />
     <ProjectReference Include="..\DailyComic.Dilbert\DailyComic.Dilbert.csproj" />
-    <ProjectReference Include="..\DailyComic.SubscriptionProviders.AzureStorage\DailyComic.Subscriptions.AzureStorage.csproj" />
+    <ProjectReference Include="..\DailyComic.Integrations.Teams\DailyComic.Integrations.Teams.csproj" />
+    <ProjectReference Include="..\DailyComic.Subscriptions.AzureStorage\DailyComic.Subscriptions.AzureStorage.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">

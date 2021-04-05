@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Threading.Tasks;
 using DailyComic.Contracts;
 using DailyComic.Model;
@@ -8,9 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
-namespace DailyComic.Func.Dilbert
+namespace DailyComic.AzureFunctions
 {
     public class SubscriberRegistration
     {
