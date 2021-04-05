@@ -2,7 +2,7 @@ using System;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
-namespace DailyComic.Func.Dilbert
+namespace DailyComic.AzureFunctions
 {
     public static class DilbertOfTheDay
     {
