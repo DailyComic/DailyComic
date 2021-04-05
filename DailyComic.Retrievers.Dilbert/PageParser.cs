@@ -3,7 +3,7 @@ using System.Linq;
 using DailyComic.Model;
 using HtmlAgilityPack;
 
-namespace DailyComic.Dilbert
+namespace DailyComic.Retrievers.Dilbert
 {
     internal class PageParser
     {

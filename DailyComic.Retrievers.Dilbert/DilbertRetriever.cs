@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using DailyComic.Contracts;
 using DailyComic.Model;
-using HtmlAgilityPack;
 using Polly;
 using Polly.Retry;
 
-namespace DailyComic.Dilbert
+namespace DailyComic.Retrievers.Dilbert
 {
     public class DilbertRetriever : IRandomComicRetriever, IComicOfTheDayRetriever
     {
