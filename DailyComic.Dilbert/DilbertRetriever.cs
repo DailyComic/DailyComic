@@ -5,81 +5,47 @@ using System.Threading.Tasks;
 using DailyComic.Contracts;
 using DailyComic.Model;
 using HtmlAgilityPack;
+using Polly;
+using Polly.Retry;
 
 namespace DailyComic.Dilbert
 {
     public class DilbertRetriever : IRandomComicRetriever, IComicOfTheDayRetriever
     {
-        private HttpClient client;
-        private readonly string baseUrl = "https://dilbert.com/";
         public DilbertRetriever()
         {
-            this.client = new HttpClient() { BaseAddress = new Uri(baseUrl+"strip/") };
-        }
-
-        public async Task<ComicStrip> GetRandomComic()
-        {
-            HttpResponseMessage response = await this.client.GetAsync(this.GetDateString(true));
-            response.EnsureSuccessStatusCode();
-
-
-            string page = await response.Content.ReadAsStringAsync();
-
-            return Parse(page);
-        }
-
-        private ComicStrip Parse(string pageHtml)
-        {
-            HtmlDocument document = new HtmlDocument();
-            document.LoadHtml(pageHtml);
-
-            ComicStrip comic = GetComicStripFromContainer(document);
-
-            SetNextAndPreviousUrls(document, comic);
-
-            return comic;
-        }
-
-        private void SetNextAndPreviousUrls(HtmlDocument document, ComicStrip comic)
-        {
-            HtmlNode nextUrl = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("js-load-comic-newer"));
-            comic.NextUrl = this.baseUrl + nextUrl?.Attributes["href"]?.Value?.TrimStart('/');
-            HtmlNode prevUrl = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("js-load-comic-older"));
-            comic.PreviousUrl = this.baseUrl + prevUrl?.Attributes["href"]?.Value?.TrimStart('/');
-        }
-
-        private static ComicStrip GetComicStripFromContainer(HtmlDocument document)
-        {
-            HtmlNode container = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("comic-item-container"));
-
-            if (container != null)
-            {
-                ComicStrip comic = new ComicStrip()
+            this.client = new HttpClient() { BaseAddress = new Uri(baseUrl + "strip/") };
+            this.retryPolicy = Policy
+                .Handle<Exception>()
+                .WaitAndRetryAsync(new[]
                 {
-                    ImageUrl = container.Attributes["data-image"]?.Value,
-                    Title = container.Attributes["data-title"]?.Value,
-                    PageUrl = container.Attributes["data-url"]?.Value,
-                    Author = container.Attributes["data-creator"]?.Value,
-                    Tags = container.Attributes["data-tags"]?.Value?.Split(","),
-                    Date = container.Attributes["data-date"]?.Value
-                };
+                    TimeSpan.FromSeconds(1),
+                    TimeSpan.FromSeconds(2),
+                    TimeSpan.FromSeconds(3)
+                });
+        }
 
-                if (string.IsNullOrEmpty(comic.ImageUrl))
-                {
-                    throw new InvalidOperationException("Comic container does not contain image URL.");
-                }
+        private readonly HttpClient client;
+        private readonly string baseUrl = "https://dilbert.com/";
+        private readonly AsyncRetryPolicy retryPolicy;
 
-                return comic;
-            }
-            else
-            {
-                throw new InvalidOperationException("Comic container not found");
-            }
+        public Task<ComicStrip> GetRandomComic()
+        {
+            return retryPolicy.ExecuteAsync(async () => await GetComic(true));
         }
 
         public Task<ComicStrip> GetComicOfTheDay()
         {
-            throw new NotImplementedException();
+            return retryPolicy.ExecuteAsync(async ()=>await GetComic(false));
+        }
+
+        private async Task<ComicStrip> GetComic(bool isRandomDate)
+        {
+            HttpResponseMessage response = await this.client.GetAsync(GetDateString(isRandomDate));
+            response.EnsureSuccessStatusCode();
+            string page = await response.Content.ReadAsStringAsync();
+
+            return new PageParser(this.baseUrl).Parse(page);
         }
 
         private string GetDateString(bool random)
@@ -105,5 +71,6 @@ namespace DailyComic.Dilbert
             int range = (DateTime.Today - randomComicMinimumDate).Days;
             return randomComicMinimumDate.AddDays(dayRandomizer.Next(range));
         }
+
     }
 }
