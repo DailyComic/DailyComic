@@ -45,12 +45,12 @@ namespace DailyComic.AzureFunctions
             string body = await streamReader.ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(body);
             SubscriptionName subscriptionName = ParseEnum<SubscriptionName>(data.SubscriptionName.ToString());
-            IntegrationPlatform platform = ParseEnum<IntegrationPlatform>(data.IntegrationPlatform.ToString());
             string url = data.WebhookUrl?.ToString();
             if (!Uri.TryCreate(url, UriKind.Absolute, out _))
             {
                 throw new ArgumentException($"Webhook URL seems invalid: {url}");
             }
+            IntegrationPlatform platform = this.GetPlatform(url);
 
             return new SubscriptionSettings()
             {
@@ -59,6 +59,23 @@ namespace DailyComic.AzureFunctions
                 IntegrationPlatform = platform,
                 WebhookUrl = url
             };
+        }
+
+        private IntegrationPlatform GetPlatform(string url)
+        {
+            if (url.ToLowerInvariant().Contains("office.com"))
+            {
+                return IntegrationPlatform.Teams;
+            }
+            else if (url.ToLowerInvariant().Contains("slack.com"))
+            {
+                return IntegrationPlatform.Teams;
+            }
+            else
+            {
+                throw new ArgumentException(
+                    "Provided webhook URL does not correspond to any of the supported platform");
+            }
         }
 
         private static T ParseEnum<T>(string value) where T: struct 
