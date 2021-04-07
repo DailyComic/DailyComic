@@ -19,10 +19,10 @@ namespace DailyComic.AzureFunctions
         private readonly IRandomComicRetriever retriever;
         private readonly ISubscriberProvider subscriberProvider;
 
-        public RandomDilbert()
+        public RandomDilbert(ISubscriberProvider subscriberProvider)
         {
             this.retriever = new DilbertRetriever();
-            this.subscriberProvider = new AzureStorageSubscriptionController();
+            this.subscriberProvider = subscriberProvider;
         }
 
         [FunctionName("RandomDilbert")]

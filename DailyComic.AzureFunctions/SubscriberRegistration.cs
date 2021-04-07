@@ -1,4 +1,8 @@
+using System;
+using System.IO;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
+using System.Web.Http;
 using DailyComic.Contracts;
 using DailyComic.Model;
 using Microsoft.AspNetCore.Http;
@@ -6,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace DailyComic.AzureFunctions
 {
@@ -21,22 +26,52 @@ namespace DailyComic.AzureFunctions
         [FunctionName("SubscriberRegistration")]
         public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post","get", Route = null)] HttpRequest req, ILogger log)
         {
-            SubscriptionSettings settings = this.GetSettings(req);
+            try
+            {
+                SubscriptionSettings settings = await this.GetSettings(req);
+                await subscriberRegister.AddSubscriber(settings);
+                return new OkObjectResult("Subscribed");
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestErrorMessageResult("Failed to register subscription: " + ex.Message);
+            }
 
-            await subscriberRegister.AddSubscriber(settings);
-
-            return new OkObjectResult("Subscribed");
         }
 
-        private SubscriptionSettings GetSettings(HttpRequest req)
+        private async Task<SubscriptionSettings> GetSettings(HttpRequest req)
         {
+            using StreamReader streamReader = new StreamReader(req.Body);
+            string body = await streamReader.ReadToEndAsync();
+            dynamic data = JsonConvert.DeserializeObject(body);
+            SubscriptionName subscriptionName = ParseEnum<SubscriptionName>(data.SubscriptionName.ToString());
+            IntegrationPlatform platform = ParseEnum<IntegrationPlatform>(data.IntegrationPlatform.ToString());
+            string url = data.WebhookUrl?.ToString();
+            if (!Uri.TryCreate(url, UriKind.Absolute, out _))
+            {
+                throw new ArgumentException($"Webhook URL seems invalid: {url}");
+            }
+
             return new SubscriptionSettings()
             {
-                SubscriptionName = SubscriptionName.RandomDilbert,
-                IntegrationPlatform = IntegrationPlatform.Teams,
-                Url = "https://sdl365.webhook.office.com/webhookb2/99d55d1c-8d2f-4347-913d-003b0b320bc5@df02c2f8-e418-484f-8bd6-c7f2e154f292/IncomingWebhook/82de6b302aba414f92fff698fe3b6dd4/85f91934-34b4-4405-a991-6afdf5cb965c"
+                SubscriptionId = Guid.NewGuid().ToString(),
+                SubscriptionName = subscriptionName,
+                IntegrationPlatform = platform,
+                WebhookUrl = url
             };
         }
 
+        private static T ParseEnum<T>(string value) where T: struct 
+        {
+            try
+            {
+                return Enum.Parse<T>(value);
+            }
+            catch (Exception)
+            {
+                throw new FormatException($"Cannot parse {value} as {typeof(T).Name}. " +
+                                          $"Available values: {string.Join(",",Enum.GetNames(typeof(T)))}");
+            }
+        }
     }
 }

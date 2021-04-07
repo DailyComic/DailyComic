@@ -6,6 +6,6 @@ namespace DailyComic.Contracts
 {
     public interface ISubscriberRegister
     {
-        Task<IEnumerable<SubscriptionSettings>> AddSubscriber(SubscriptionSettings subscriptionName);
+        Task AddSubscriber(SubscriptionSettings subscriptionSettings);
     }
 }

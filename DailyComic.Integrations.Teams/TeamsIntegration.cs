@@ -24,7 +24,7 @@ namespace DailyComic.Integrations.Teams
 
         public async Task SendComicTo(SubscriptionSettings settings)
         {
-            await client.PostAsync(settings.Url, content.Value);
+            await client.PostAsync(settings.WebhookUrl, content.Value);
         }
 
         private HttpContent GetContent()
