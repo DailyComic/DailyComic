@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Daily Comic</title>
+    <link href="https://fonts.googleapis.com/css?family=Heebo:400,700|IBM+Plex+Sans:600" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+    <script src="https://unpkg.com/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+<body class="is-boxed has-animations">
+    <div class="body-wrap boxed-container">
+        <header class="site-header">
+            <div class="container">
+                <div class="site-header-inner">
+                    <div class="brand header-brand">
+                        <h1 class="m-0">
+                            <a href="#">
+								<img style="height: 60px;" class="header-logo-image asset-light" src="images/logo-large.png" alt="Logo">
+                            </a>
+                        </h1>
+                    </div>
+                    <div class="brand header-brand">
+                        <a target="blank" href="https://github.com/bartosz-jarmuz/dailycomic">
+                            <span class="screen-reader-text">GitHub</span>
+                            <i class="fab fa-2x fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+        </header>
+
+        <main>
+            <section class="hero">
+                <div class="container">
+                    <div class="hero-inner">
+						<div class="hero-copy">
+	                        <h1 class="hero-title mt-0">Daily Comic</h1>
+	                        <p class="hero-paragraph">Get your favourite comic strip delivered to your communication app daily.</p>
+	                        <div class="hero-cta">
+								<a class="button button-primary" href="#subscribe">Subscribe for free</a>
+								
+							</div>
+						</div>
+						<div class="hero-media">
+							<div class="header-illustration">
+								<img class="header-illustration-image asset-light" src="images/header-illustration-light.svg" alt="Header illustration">
+							</div>
+							<div class="hero-media-illustration">
+								<img class="hero-media-illustration-image asset-light" src="images/hero-media-illustration-light.svg" alt="Hero media illustration">
+							</div>
+							<div class="hero-media-container">
+								<img class="hero-media-image asset-light" src="images/teams_large.png" alt="Hero media">
+							</div>
+						</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="features section">
+                <div class="container">
+					<div class="features-inner section-inner has-bottom-divider">
+						<div class="features-header text-center">
+							<div class="container-sm">
+								<h2 class="section-title mt-0">How does it work?</h2>
+	                            <p class="section-paragraph">Setup a webhook in your integration platform.</p>
+	                            <p class="section-paragraph">It's simple, see how!</p>
+								<div class="features-image">
+									<img class="features-illustration asset-light" src="images/features-illustration-light.svg" alt="Feature illustration">
+									<img class="features-box asset-light" src="images/teams_large.png" alt="Feature box">
+									<img class="features-illustration asset-light" src="images/features-illustration-top-light.svg" alt="Feature illustration top">
+								</div>
+							</div>
+                        </div>
+                        <div class="features-wrap">
+                            <div class="feature is-revealing">
+                                <div class="feature-inner">
+                                    <div class="feature-icon">
+										<img class="asset-light" src="images/feature-01-light.svg" alt="Step 01">
+                                    </div>
+									<div class="feature-content">
+                                    	<h3 class="feature-title mt-0">Prepare your app</h3>
+                                        <p class="text-sm mb-0">Your communication app needs to listen for incoming comics. See how to do it for <a
+                                             target="blank"   href="https://techcommunity.microsoft.com/t5/microsoft-365-pnp-blog/how-to-configure-and-use-incoming-webhooks-in-microsoft-teams/ba-p/2051118">Teams</a>.
+                                        </p>
+									</div>
+								</div>
+                            </div>
+							<div class="feature is-revealing">
+                                <div class="feature-inner">
+                                    <div class="feature-icon">
+										<img class="asset-light" src="images/feature-02-light.svg" alt="Step 02">
+                                    </div>
+									<div class="feature-content">
+                                    	<h3 class="feature-title mt-0">Copy the webhook link</h3>
+                                    	<p class="text-sm mb-0">Make sure to keep the webhook link secure. It's your secret.</p>
+									</div>
+								</div>
+                            </div>
+							<div class="feature is-revealing">
+                                <div class="feature-inner">
+                                    <div class="feature-icon">
+										<img class="asset-light" src="images/feature-03-light.svg" alt="Step 03">
+                                    </div>
+									<div class="feature-content">
+                                    	<h3 class="feature-title mt-0">Register subscription</h3>
+                                    	<p class="text-sm mb-0">Paste your link to the form below. Be sure to elect which comic you want to get.</p>
+									</div>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+			<section class="cta section">
+                <div class="container-sm">
+                    <div class="cta-inner section-inner" id="subscribe">
+                        <div class="cta-header text-center">
+                            <h2 class="section-title mt-0">Subscribe now</h2>
+                            
+                            <div class="form">
+                                <div class="form-group">
+                                  <input type="email" class="form-control" id="WebhookUrlBox" placeholder="Paste your secret webhook URL here">
+                                </div>
+                                <div class="form-group">
+                                  <label for="SubscriptionTypeSelect">I want to get</label>
+                                  <select class="form-control" id="SubscriptionTypeSelect">
+                                    <option value="RandomDilbert">Dilbert - random strip every day (released between 1st January 1995 and today)</option>
+                                    <option value="DilbertOfTheDay">Dilbert - strip for the current date (new strip is released every day)</option>
+                                  </select>
+                                </div>
+                              </div>
+							<div class="cta-cta">
+								<button class="button button-primary" id="SubscribeButton">Register</button>
+							</div>
+                            <div style="display: none;" id="ConfirmationAlert" class="display-success"></div>
+                            <p style="margin-top: 10px!important;">First comic strip will be sent immediately to check if it works.</p>
+                            <p style="font-size: x-small; margin: 0px!important;">When you're bored with comics, simply remove the webhook in your communicator app.</p>
+					    </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer has-top-divider">
+            <div class="container">
+                <div class="site-footer-inner">
+                    <div class="brand footer-brand">
+                        <a href="#">
+							<img class="asset-light" style="height: 60px;" src="images/logo-large-white.png" alt="Logo">
+                        </a>
+                    </div>
+                    <ul class="footer-links list-reset">
+                        <li>
+                            <a href="mailto:bartosz.jarmuz@gmail.com">Contact</a>
+                        </li>
+                        <li>
+                            <a target="blank" href="https://github.com/bartosz-jarmuz/DailyComic/wiki">About</a>
+                        </li>
+                        <li>
+                            <a target="blank" href="https://github.com/bartosz-jarmuz/DailyComic/wiki/Copyrights">Copyrights</a>
+                        </li>
+                        <li>
+                            <a target="blank" href="https://github.com/bartosz-jarmuz/DailyComic/wiki/Security">Security</a>
+                        </li>
+                        <li>
+                            <a target="blank" href="https://github.com/bartosz-jarmuz/DailyComic/issues">Support</a>
+                        </li>
+                    </ul>
+                    <ul class="footer-social-links list-reset">
+                        <li>
+                            <a href="https://github.com/bartosz-jarmuz/dailycomic">
+                                <span class="screen-reader-text">GitHub</span>
+                                <i class="fab fa-2x fa-github"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="footer-copyright">
+                        <div>Icons made by&nbsp;<a href="https://www.flaticon.com/authors/smalllikeart" title="smalllikeart">smalllikeart</a>&nbsp; from <a
+                                href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+                        <div>&nbsp;&amp;&nbsp;layout by <a href="mailto:pasqualevitiello@gmail.com">Pasquale Vitiello</a> </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
