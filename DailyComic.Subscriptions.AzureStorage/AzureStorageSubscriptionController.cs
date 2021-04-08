@@ -54,7 +54,7 @@ namespace DailyComic.Subscriptions.AzureStorage
             TableQuerySegment<SubscriptionEntity> existingHookQueryResult = await table.ExecuteQuerySegmentedAsync(new TableQuery<SubscriptionEntity>().Where(filter), null);
             if (existingHookQueryResult.Results.Any())
             {
-                throw new InvalidOperationException("Specified webhook is already registered for this subscription type");
+                throw new InvalidOperationException("Specified webhook is already registered for this comic subscription.");
             }
 
             TableOperation insertOrMergeOperation = TableOperation.InsertOrMerge(entity);

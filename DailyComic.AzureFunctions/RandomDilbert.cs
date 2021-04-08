@@ -16,12 +16,12 @@ namespace DailyComic.AzureFunctions
     // ReSharper disable once UnusedMember.Global
     public class RandomDilbert
     {
-        private readonly IRandomComicRetriever retriever;
+        private readonly IComicRetriever retriever;
         private readonly ISubscriberProvider subscriberProvider;
 
         public RandomDilbert(ISubscriberProvider subscriberProvider)
         {
-            this.retriever = new DilbertRetriever();
+            this.retriever = ComicRetrieverFactory.Get(SubscriptionName.RandomDilbert);
             this.subscriberProvider = subscriberProvider;
         }
 
@@ -31,12 +31,12 @@ namespace DailyComic.AzureFunctions
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
-            ComicStrip comic = await this.retriever.GetRandomComic();
+            ComicStrip comic = await this.retriever.GetComic();
 
             IEnumerable<SubscriptionSettings> subscriptions = await subscriberProvider.GetSubscribers(SubscriptionName.RandomDilbert);
 
-            ComicPusher pusher = new ComicPusher(comic);
-            await pusher.Push(subscriptions);
+            ComicSendingController sendingController = new ComicSendingController(comic);
+            await sendingController.Push(subscriptions);
 
             return new OkResult();
         }

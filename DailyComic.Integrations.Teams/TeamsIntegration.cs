@@ -2,13 +2,14 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using DailyComic.Contracts;
 using DailyComic.Integrations.Teams.Model;
 using DailyComic.Model;
 using Newtonsoft.Json;
 
 namespace DailyComic.Integrations.Teams
 {
-    public class TeamsIntegration 
+    public class TeamsIntegration : IComicSender
     {
         public TeamsIntegration(ComicStrip comic)
         {
@@ -22,9 +23,20 @@ namespace DailyComic.Integrations.Teams
         private readonly Lazy<HttpContent> content;
         private readonly IMessageCardCreator cardCreator;
 
-        public async Task SendComicTo(SubscriptionSettings settings)
+        public async Task<ComicDeliveryResult> SendComicTo(SubscriptionSettings settings)
         {
-            await client.PostAsync(settings.WebhookUrl, content.Value);
+            HttpResponseMessage response = await client.PostAsync(settings.WebhookUrl, content.Value);
+            if (response.IsSuccessStatusCode)
+            {
+                return new ComicDeliveryResult() {IsSuccess = true};
+            }
+            else
+            {
+                var errorResponse = await response.Content.ReadAsStringAsync();
+                return new ComicDeliveryResult() {IsSuccess = false, Message = errorResponse};
+            }
+
+
         }
 
         private HttpContent GetContent()

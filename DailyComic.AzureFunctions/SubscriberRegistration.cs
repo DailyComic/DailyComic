@@ -24,19 +24,30 @@ namespace DailyComic.AzureFunctions
         }
 
         [FunctionName("SubscriberRegistration")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post","get", Route = null)] HttpRequest req, ILogger log)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req, ILogger log)
         {
             try
             {
                 SubscriptionSettings settings = await this.GetSettings(req);
-                await subscriberRegister.AddSubscriber(settings);
-                return new OkObjectResult("Subscribed");
+                IComicRetriever retriever = ComicRetrieverFactory.Get(settings.SubscriptionName);
+                ComicStrip comic = await retriever.GetComic();
+                ComicSendingController sendingController = new ComicSendingController(comic);
+                ComicDeliveryResult result = await sendingController.Push(settings);
+                if (result.IsSuccess)
+                {
+                    await subscriberRegister.AddSubscriber(settings);
+                    return new OkObjectResult("Subscribed");
+                }
+                else
+                {
+                    return new BadRequestErrorMessageResult("Error while sending test comic: " + result.Message);
+                }
+
             }
             catch (Exception ex)
             {
-                return new BadRequestErrorMessageResult("Failed to register subscription: " + ex.Message);
+                return new BadRequestErrorMessageResult(ex.Message);
             }
-
         }
 
         private async Task<SubscriptionSettings> GetSettings(HttpRequest req)

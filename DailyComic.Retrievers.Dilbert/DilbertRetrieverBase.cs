@@ -8,12 +8,12 @@ using Polly.Retry;
 
 namespace DailyComic.Retrievers.Dilbert
 {
-    public class DilbertRetriever : IRandomComicRetriever, IComicOfTheDayRetriever
+    public abstract class DilbertRetrieverBase : IComicRetriever
     {
-        public DilbertRetriever()
+        protected DilbertRetrieverBase()
         {
-            this.client = new HttpClient() { BaseAddress = new Uri(baseUrl + "strip/") };
-            this.retryPolicy = Policy
+            this.client = new HttpClient() { BaseAddress = new Uri(BaseUrl + "strip/") };
+            this.RetryPolicy = Policy
                 .Handle<Exception>()
                 .WaitAndRetryAsync(new[]
                 {
@@ -24,26 +24,18 @@ namespace DailyComic.Retrievers.Dilbert
         }
 
         private readonly HttpClient client;
-        private readonly string baseUrl = "https://dilbert.com/";
-        private readonly AsyncRetryPolicy retryPolicy;
+        protected readonly string BaseUrl = "https://dilbert.com/";
+        protected readonly AsyncRetryPolicy RetryPolicy;
 
-        public Task<ComicStrip> GetRandomComic()
-        {
-            return retryPolicy.ExecuteAsync(async () => await GetComic(true));
-        }
+        public abstract Task<ComicStrip> GetComic();
 
-        public Task<ComicStrip> GetComicOfTheDay()
-        {
-            return retryPolicy.ExecuteAsync(async ()=>await GetComic(false));
-        }
-
-        private async Task<ComicStrip> GetComic(bool isRandomDate)
+        protected async Task<ComicStrip> GetComic(bool isRandomDate)
         {
             HttpResponseMessage response = await this.client.GetAsync(GetDateString(isRandomDate));
             response.EnsureSuccessStatusCode();
             string page = await response.Content.ReadAsStringAsync();
 
-            return new PageParser(this.baseUrl).Parse(page);
+            return new PageParser(this.BaseUrl).Parse(page);
         }
 
         private string GetDateString(bool random)

@@ -7,10 +7,10 @@ using DailyComic.Model;
 
 namespace DailyComic.AzureFunctions
 {
-    internal class ComicPusher 
+    internal class ComicSendingController 
     {
         private readonly TeamsIntegration teams;
-        public ComicPusher(ComicStrip comic)
+        public ComicSendingController(ComicStrip comic)
         {
             teams = new TeamsIntegration(comic);
         }
@@ -26,7 +26,12 @@ namespace DailyComic.AzureFunctions
             await Task.WhenAll(tasks);
         }
 
-        private Task StartDeliveryTask(SubscriptionSettings settings)
+        public Task<ComicDeliveryResult> Push(SubscriptionSettings settings)
+        {
+            return StartDeliveryTask(settings);
+        }
+
+        private Task<ComicDeliveryResult>StartDeliveryTask(SubscriptionSettings settings)
         {
             switch (settings.IntegrationPlatform)
             {

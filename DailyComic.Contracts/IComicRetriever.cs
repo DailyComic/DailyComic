@@ -5,8 +5,8 @@ using DailyComic.Model;
 
 namespace DailyComic.Contracts
 {
-    public interface IRandomComicRetriever
+    public interface IComicRetriever
     {
-        Task<ComicStrip> GetRandomComic();
+        Task<ComicStrip> GetComic();
     }
 }
