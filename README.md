@@ -19,3 +19,6 @@ The Azure Function uses an incoming webhook to send a simple json payload to the
 
 # Why does it exist?
 I wanted to create a 'small but functional' side projects after having done my MSFT Azure training.
+
+# Anything else?
+Have a look at [Wiki](https://github.com/DailyComic/DailyComic/wiki) for more info, especially on copyrights, guarantees and security
