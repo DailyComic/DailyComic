@@ -11,12 +11,6 @@ namespace DailyComic.AzureFunctions
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            builder.Services.AddOptions<DailyComicSettings>()
-                .Configure<IConfiguration>((settings, configuration) =>
-                {
-                    configuration.GetSection(nameof(DailyComicSettings)).Bind(settings);
-                });
-
             builder.AddSubscriptionsController();
         }
 
