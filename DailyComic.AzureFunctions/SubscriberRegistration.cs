@@ -18,6 +18,8 @@ namespace DailyComic.AzureFunctions
     {
         private readonly ISubscriberRegister subscriberRegister;
 
+        private readonly string expectedHost = "";
+
         public SubscriberRegistration(ISubscriberRegister subscriberRegister)
         {
             this.subscriberRegister = subscriberRegister;
@@ -28,6 +30,11 @@ namespace DailyComic.AzureFunctions
         {
             try
             {
+                if (!IsValidHost(req))
+                {
+                    return new ForbidResult(req.Host.Host);
+                }
+
                 SubscriptionSettings settings = await this.GetSettings(req);
                 IComicRetriever retriever = ComicRetrieverFactory.Get(settings.SubscriptionName);
                 ComicStrip comic = await retriever.GetComic();
@@ -48,6 +55,16 @@ namespace DailyComic.AzureFunctions
             {
                 return new BadRequestErrorMessageResult(ex.Message);
             }
+        }
+
+        private static bool IsValidHost(HttpRequest req)
+        {
+#if DEBUG
+            return true;
+#endif
+#pragma warning disable 162
+            return req.Host.Host.Contains("https://dailycomic.github.io/");
+#pragma warning restore 162
         }
 
         private async Task<SubscriptionSettings> GetSettings(HttpRequest req)
