@@ -18,8 +18,6 @@ namespace DailyComic.AzureFunctions
     {
         private readonly ISubscriberRegister subscriberRegister;
 
-        private readonly string expectedHost = "";
-
         public SubscriberRegistration(ISubscriberRegister subscriberRegister)
         {
             this.subscriberRegister = subscriberRegister;
@@ -32,6 +30,7 @@ namespace DailyComic.AzureFunctions
             {
                 if (!IsValidHost(req))
                 {
+                    log.LogWarning($"Subscription attempt from host: {req.Host.Host}");
                     return new ForbidResult(req.Host.Host);
                 }
 
