@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DailyComic.Contracts;
+using DailyComic.Integrations.Slack;
 using DailyComic.Integrations.Teams;
 using DailyComic.Model;
 
@@ -10,9 +11,12 @@ namespace DailyComic.AzureFunctions
     internal class ComicSendingController 
     {
         private readonly TeamsIntegration teams;
+        private readonly SlackIntegration slack;
         public ComicSendingController(ComicStrip comic)
         {
             teams = new TeamsIntegration(comic);
+            slack = new SlackIntegration(comic);
+
         }
 
         public async Task Push(IEnumerable<SubscriptionSettings> subscriptionSettings)
@@ -38,7 +42,7 @@ namespace DailyComic.AzureFunctions
                 case IntegrationPlatform.Teams:
                     return teams.SendComicTo(settings);
                 case IntegrationPlatform.Slack:
-                    throw new NotImplementedException("Slack is not there yet");
+                    return slack.SendComicTo(settings);
                 default:
                     throw new ArgumentOutOfRangeException($"{settings.IntegrationPlatform} is not supported.");
             }

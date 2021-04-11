@@ -80,7 +80,7 @@ namespace DailyComic.AzureFunctions
             }
             else if (url.ToLowerInvariant().Contains("slack.com"))
             {
-                return IntegrationPlatform.Teams;
+                return IntegrationPlatform.Slack;
             }
             else
             {
