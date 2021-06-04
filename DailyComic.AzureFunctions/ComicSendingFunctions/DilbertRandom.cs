@@ -14,12 +14,12 @@ using Microsoft.Extensions.Logging;
 namespace DailyComic.AzureFunctions
 {
     // ReSharper disable once UnusedMember.Global
-    public class RandomDilbert
+    public class DilbertRandom
     {
         private readonly IComicRetriever retriever;
         private readonly ISubscriberProvider subscriberProvider;
 
-        public RandomDilbert(ISubscriberProvider subscriberProvider)
+        public DilbertRandom(ISubscriberProvider subscriberProvider)
         {
             this.retriever = ComicRetrieverFactory.Get(SubscriptionName.DilbertRandom);
             this.subscriberProvider = subscriberProvider;
