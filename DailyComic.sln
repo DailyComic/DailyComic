@@ -19,6 +19,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DailyComic.Retrievers.Dilbe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyComic.Retrievers.CommitStrip", "DailyComic.Retrievers.CommitStrip\DailyComic.Retrievers.CommitStrip.csproj", "{1A9A00DA-6B4D-4CAA-9CA4-EFA060B4FABD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComicRetrievers", "ComicRetrievers", "{FE575BDB-FA6C-4DD7-B85E-ACDDBEBE71B8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integrations", "Integrations", "{21CB092F-D3A2-4710-89C8-A82D9AAF3563}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +64,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{347F8BA1-7698-4A1F-9B11-F17359AA132F} = {21CB092F-D3A2-4710-89C8-A82D9AAF3563}
+		{8E455BDE-8EDD-48CE-B8CD-EFA1903086D6} = {21CB092F-D3A2-4710-89C8-A82D9AAF3563}
+		{6FCBFA9E-002B-4FD7-A045-1B048433C13B} = {FE575BDB-FA6C-4DD7-B85E-ACDDBEBE71B8}
+		{1A9A00DA-6B4D-4CAA-9CA4-EFA060B4FABD} = {FE575BDB-FA6C-4DD7-B85E-ACDDBEBE71B8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B77E8477-4E89-423A-8F86-8353CFF3CACA}
