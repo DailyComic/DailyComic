@@ -12,7 +12,7 @@ namespace DailyComic.Retrievers.CommitStrip
     {
         protected RetrieverBase()
         {
-            this.client = new HttpClient() { BaseAddress = new Uri(BaseUrl + "strip/") };
+            this.client = new HttpClient() { BaseAddress = new Uri(BaseUrl + "en/") };
             this.RetryPolicy = Policy
                 .Handle<Exception>()
                 .WaitAndRetryAsync(new[]

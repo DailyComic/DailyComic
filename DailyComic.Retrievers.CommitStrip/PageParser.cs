@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using DailyComic.Model;
+using HtmlAgilityPack;
 
 namespace DailyComic.Retrievers.CommitStrip
 {
