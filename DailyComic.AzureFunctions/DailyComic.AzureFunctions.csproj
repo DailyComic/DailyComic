@@ -14,6 +14,7 @@
     <ProjectReference Include="..\DailyComic.Contracts\DailyComic.Contracts.csproj" />
     <ProjectReference Include="..\DailyComic.Integrations.Slack\DailyComic.Integrations.Slack.csproj" />
     <ProjectReference Include="..\DailyComic.Integrations.Teams\DailyComic.Integrations.Teams.csproj" />
+    <ProjectReference Include="..\DailyComic.Retrievers.CommitStrip\DailyComic.Retrievers.CommitStrip.csproj" />
     <ProjectReference Include="..\DailyComic.Retrievers.Dilbert\DailyComic.Retrievers.Dilbert.csproj" />
     <ProjectReference Include="..\DailyComic.Subscriptions.AzureStorage\DailyComic.Subscriptions.AzureStorage.csproj" />
   </ItemGroup>

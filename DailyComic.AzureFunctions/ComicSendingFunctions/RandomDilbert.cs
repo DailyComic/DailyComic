@@ -21,7 +21,7 @@ namespace DailyComic.AzureFunctions
 
         public RandomDilbert(ISubscriberProvider subscriberProvider)
         {
-            this.retriever = ComicRetrieverFactory.Get(SubscriptionName.RandomDilbert);
+            this.retriever = ComicRetrieverFactory.Get(SubscriptionName.DilbertRandom);
             this.subscriberProvider = subscriberProvider;
         }
 
@@ -33,7 +33,7 @@ namespace DailyComic.AzureFunctions
 
             ComicStrip comic = await this.retriever.GetComic();
 
-            IEnumerable<SubscriptionSettings> subscriptions = await subscriberProvider.GetSubscribers(SubscriptionName.RandomDilbert);
+            IEnumerable<SubscriptionSettings> subscriptions = await subscriberProvider.GetSubscribers(SubscriptionName.DilbertRandom);
 
             ComicSendingController sendingController = new ComicSendingController(comic);
             await sendingController.Push(subscriptions);

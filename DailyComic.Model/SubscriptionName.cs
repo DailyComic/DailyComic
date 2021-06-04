@@ -2,7 +2,9 @@
 {
     public enum SubscriptionName
     {
-        RandomDilbert,
-        DilbertOfTheDay
+        DilbertRandom,
+        DilbertOfTheDay,
+        CommitStripRandom,
+        CommitStripOfTheDay
     }
 }
