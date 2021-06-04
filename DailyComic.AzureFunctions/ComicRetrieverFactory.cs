@@ -12,9 +12,9 @@ namespace DailyComic.AzureFunctions
             switch (subscriptionName)
             {
                 case SubscriptionName.RandomDilbert:
-                    return new RandomDilbertRetriever();
+                    return new RandomRetriever();
                 case SubscriptionName.DilbertOfTheDay:
-                    return new DilbertOfTheDayRetriever();
+                    return new ComicOfTheDayRetriever();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(subscriptionName), subscriptionName, $"Retriever for {subscriptionName} not implemented.");
             }

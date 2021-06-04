@@ -8,9 +8,9 @@ using Polly.Retry;
 
 namespace DailyComic.Retrievers.Dilbert
 {
-    public abstract class DilbertRetrieverBase : IComicRetriever
+    public abstract class RetrieverBase : IComicRetriever
     {
-        protected DilbertRetrieverBase()
+        protected RetrieverBase()
         {
             this.client = new HttpClient() { BaseAddress = new Uri(BaseUrl + "strip/") };
             this.RetryPolicy = Policy
