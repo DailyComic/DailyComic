@@ -2,6 +2,7 @@
 {
     public enum ComicName
     {
+        CommitStrip,
         Dilbert
     }
 }
