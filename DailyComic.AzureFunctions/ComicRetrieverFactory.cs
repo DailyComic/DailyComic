@@ -13,7 +13,7 @@ namespace DailyComic.AzureFunctions
                 case SubscriptionName.CommitStripOfTheDay:
                     return new Retrievers.CommitStrip.ComicOfTheDayRetriever();
                 case SubscriptionName.CommitStripRandom:
-                    return new Retrievers.CommitStrip.ComicOfTheDayRetriever();
+                    return new Retrievers.CommitStrip.RandomRetriever();
 
                 //dilbert - not officially supported as no confirmation from the authors
                 case SubscriptionName.DilbertRandom:
