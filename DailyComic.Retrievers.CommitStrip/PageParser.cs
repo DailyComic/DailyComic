@@ -7,11 +7,17 @@ namespace DailyComic.Retrievers.CommitStrip
 {
     internal class PageParser
     {
-        private readonly string baseUrl;
 
-        public PageParser(string baseUrl)
+        public PageParser()
         {
-            this.baseUrl = baseUrl;
+        }
+
+        public string ParseInitialPageAndGetUrl(string pageHtml)
+        {
+            HtmlDocument document = new HtmlDocument();
+            document.LoadHtml(pageHtml);
+
+            return GetComicUrlFromTocPage(document);
         }
 
         public ComicStrip Parse(string pageHtml)
@@ -28,28 +34,51 @@ namespace DailyComic.Retrievers.CommitStrip
 
         private void SetNextAndPreviousUrls(HtmlDocument document, ComicStrip comic)
         {
-            HtmlNode nextUrl = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("js-load-comic-newer"));
-            comic.NextUrl = this.baseUrl + nextUrl?.Attributes["href"]?.Value?.TrimStart('/');
-            HtmlNode prevUrl = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("js-load-comic-older"));
-            comic.PreviousUrl = this.baseUrl + prevUrl?.Attributes["href"]?.Value?.TrimStart('/');
+            HtmlNode nextUrl = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("nav-next"))?.Descendants("a").FirstOrDefault();
+            comic.NextUrl =  nextUrl?.Attributes["href"]?.Value?.TrimStart('/');
+            HtmlNode prevUrl = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("nav-previous"))?.Descendants("a").FirstOrDefault();
+            comic.PreviousUrl = prevUrl?.Attributes["href"]?.Value?.TrimStart('/');
+        }
+
+        private static string GetComicUrlFromTocPage(HtmlDocument document)
+        {
+            HtmlNode container = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("excerpt"));
+            
+            if (container != null)
+            {
+                var url = container.Descendants("a").FirstOrDefault();
+                if (url == null)
+                {
+                    throw new InvalidOperationException("Comic TOC URL not found");
+                }
+
+                return url.Attributes["href"].Value;
+            }
+            else
+            {
+                if (document.DocumentNode.Descendants().Any(x => x.HasClass("error404")))
+                {
+                    return null;
+                }
+                throw new InvalidOperationException("Comic TOC not found");
+            }
         }
 
         private static ComicStrip GetComicStripFromContainer(HtmlDocument document)
         {
-            HtmlNode container = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("comic-item-container"));
+            HtmlNode container = document.DocumentNode.Descendants("article").FirstOrDefault();
 
             if (container != null)
             {
-                ComicStrip comic = new ComicStrip(ComicName.Dilbert)
+                ComicStrip comic = new ComicStrip(ComicName.CommitStrip)
                 {
-                    ImageUrl = container.Attributes["data-image"]?.Value,
-                    Title = container.Attributes["data-title"]?.Value,
-                    PageUrl = container.Attributes["data-url"]?.Value,
-                    ComicId = container.Attributes["data-id"]?.Value,
-                    Author = container.Attributes["data-creator"]?.Value,
-                    Tags = container.Attributes["data-tags"]?.Value?.Split(","),
-                    Date = container.Attributes["data-date"]?.Value
+                    Title = container.Descendants().FirstOrDefault(x=>x.HasClass("entry-title"))?.InnerText,
+                    PageUrl= container.Descendants().FirstOrDefault(x=>x.HasClass("entry-meta"))?.Descendants("a").FirstOrDefault()?.Attributes["href"]?.Value,
+                    ImageUrl = container.Descendants("img").FirstOrDefault()?.Attributes["src"].Value,
+                    Author = "CommitStrip.com",
+                    Date = container.Descendants().FirstOrDefault(x => x.HasClass("entry-date"))?.InnerText,
                 };
+                comic.ComicId = comic.PageUrl;
 
                 if (string.IsNullOrEmpty(comic.ImageUrl))
                 {
