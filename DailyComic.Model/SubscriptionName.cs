@@ -3,7 +3,7 @@
     public enum SubscriptionName
     {
         MonkeyUserRandom,
-        MonkeyUserOfTheDay,
+        //MonkeyUserOfTheDay,
 
         DilbertRandom,
         DilbertOfTheDay,

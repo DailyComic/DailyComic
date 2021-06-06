@@ -6,7 +6,7 @@ using DailyComic.Model;
 
 namespace DailyComic.Integrations.Teams
 {
-    internal class CardCreator : IMessageCardCreator
+    internal class TeamsCardCreator : IMessageCardCreator
     {
         public virtual MessageCard GetMessageCard(ComicStrip comic)
         {

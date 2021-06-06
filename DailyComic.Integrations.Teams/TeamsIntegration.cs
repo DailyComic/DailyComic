@@ -20,7 +20,7 @@ namespace DailyComic.Integrations.Teams
         private readonly ComicStrip comic;
         private readonly HttpClient client = new HttpClient();
         private readonly Lazy<HttpContent> content;
-        private readonly IMessageCardCreator cardCreator = new CardCreator();
+        private readonly IMessageCardCreator cardCreator = new TeamsCardCreator();
 
         public async Task<ComicDeliveryResult> SendComicTo(SubscriptionSettings settings)
         {

@@ -15,8 +15,6 @@ namespace DailyComic.AzureFunctions
                 case SubscriptionName.CommitStripRandom:
                     return new Retrievers.CommitStrip.RandomRetriever();
 
-                case SubscriptionName.MonkeyUserOfTheDay:
-                    return new Retrievers.MonkeyUser.ComicOfTheDayRetriever();
                 case SubscriptionName.MonkeyUserRandom:
                     return new Retrievers.MonkeyUser.RandomRetriever();
 

@@ -6,7 +6,7 @@ using DailyComic.Model;
 
 namespace DailyComic.Integrations.Slack
 {
-    internal class CardCreator : IMessageCardCreator
+    internal class SlackCardCreator : IMessageCardCreator
     {
         public virtual MessageCard GetMessageCard(ComicStrip comic)
         {
