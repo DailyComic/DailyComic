@@ -28,7 +28,8 @@ namespace DailyComic.Integrations.Slack
                 Type = Types.Header,
                 Text = new Text()
                 {
-                    TextText = $"{comic.Title}"
+                    TextText = $"{comic.Title}",
+                    Type = Types.PlainText
                 }
             });
             card.Blocks.Add(new Block()
