@@ -12,7 +12,7 @@ namespace DailyComic.Retrievers.MonkeyUser
     {
         protected RetrieverBase()
         {
-            this.client = new HttpClient() { BaseAddress = new Uri(BaseUrl + "strip/") };
+            this.client = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
             this.RetryPolicy = Policy
                 .Handle<Exception>()
                 .WaitAndRetryAsync(new[]
@@ -24,42 +24,61 @@ namespace DailyComic.Retrievers.MonkeyUser
         }
 
         private readonly HttpClient client;
-        protected readonly string BaseUrl = "https://dilbert.com/";
+        protected readonly string BaseUrl = "https://www.monkeyuser.com/";
         protected readonly AsyncRetryPolicy RetryPolicy;
 
         public abstract Task<ComicStrip> GetComic();
 
         protected async Task<ComicStrip> GetComic(bool isRandomDate)
         {
-            HttpResponseMessage response = await this.client.GetAsync(GetDateString(isRandomDate));
-            response.EnsureSuccessStatusCode();
-            string page = await response.Content.ReadAsStringAsync();
-
-            return new PageParser(this.BaseUrl).Parse(page);
-        }
-
-        private string GetDateString(bool random)
-        {
-            if (random)
+            PageParser parser = new PageParser(this.BaseUrl);
+            if (isRandomDate)
             {
-                return FormatDate(this.GetRandomDate());
+                return await GetRandomComic(parser);
             }
             else
             {
-                return FormatDate(DateTime.UtcNow);
+                //ComicStrip comic;
+                //string dateString = GetDateString();
+                //string tocPage = await this.client.GetPageContentWithRetries($"https://" + $"www.commitstrip.com/en/{dateString}");
+                //string finalUrl = parser.ParseInitialPageAndGetRandomUrl(tocPage);
+                //if (finalUrl != null)
+                //{
+                //    string finalPage = await this.client.GetPageContentWithRetries(finalUrl);
+                //    comic = parser.Parse(finalPage);
+                //}
+                //else
+                //{
+                //    comic = await GetRandomComic(parser);
+                //    comic.Title = $"{comic.Title} (No comics for {dateString})";
+                //}
+
+                return null;
             }
-            string FormatDate(DateTime date)
-            {
-                return $"{date.Year}-{date.Month}-{date.Day}";
-            }
+
         }
 
-        private DateTime GetRandomDate()
+        private async Task<ComicStrip> GetRandomComic(PageParser parser)
         {
-            Random dayRandomizer = new Random();
-            DateTime randomComicMinimumDate = new DateTime(1995, 1, 1);
-            int range = (DateTime.Today - randomComicMinimumDate).Days;
-            return randomComicMinimumDate.AddDays(dayRandomizer.Next(range));
+            HttpResponseMessage homePageResponse = await this.client.GetAsync("");
+            string homePage = await homePageResponse.Content.ReadAsStringAsync();
+
+            string finalUrl = parser.ParseInitialPageAndGetRandomUrl(homePage);
+
+            HttpResponseMessage finalResponse = await this.client.GetAsync(finalUrl);
+
+            string comicPage = await finalResponse.Content.ReadAsStringAsync();
+
+            return parser.Parse(comicPage, finalUrl);
+        }
+
+        private string GetDateString()
+        {
+            return FormatDate(DateTime.UtcNow);
+            string FormatDate(DateTime date)
+            {
+                return $"{date.Year}/{date.Month}/{date.Day}";
+            }
         }
 
     }

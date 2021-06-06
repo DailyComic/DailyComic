@@ -18,7 +18,7 @@ namespace DailyComic.Model
         public string PreviousUrl { get; set; }
         public string ImageUrl { get; set; }
         public string Title { get; set; }
-        public IReadOnlyCollection<string> Tags { get; set; } = new List<string>().AsReadOnly();
+        public List<Tag> Tags { get; set; } = new List<Tag>();
         public string Author { get; set; }
         public string Date { get; set; }
         public string ComicId { get; set; }

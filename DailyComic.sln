@@ -25,6 +25,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integrations", "Integration
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyComic.Retrievers.MonkeyUser", "DailyComic.Retrievers.MonkeyUser\DailyComic.Retrievers.MonkeyUser.csproj", "{8EF0E2BD-4450-4E17-A800-E89FC8BE5DA0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyComic.HtmlUtils", "DailyComic.HtmlUtils\DailyComic.HtmlUtils.csproj", "{50CD2F27-EE06-4022-81B5-677ECB1528E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyComic.HtmlUtils.Tests", "DailyComic.HtmlUtils.Tests\DailyComic.HtmlUtils.Tests.csproj", "{15A388D8-BA87-48A1-A1E3-D319212813C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +71,14 @@ Global
 		{8EF0E2BD-4450-4E17-A800-E89FC8BE5DA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EF0E2BD-4450-4E17-A800-E89FC8BE5DA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EF0E2BD-4450-4E17-A800-E89FC8BE5DA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50CD2F27-EE06-4022-81B5-677ECB1528E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50CD2F27-EE06-4022-81B5-677ECB1528E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50CD2F27-EE06-4022-81B5-677ECB1528E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50CD2F27-EE06-4022-81B5-677ECB1528E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15A388D8-BA87-48A1-A1E3-D319212813C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15A388D8-BA87-48A1-A1E3-D319212813C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15A388D8-BA87-48A1-A1E3-D319212813C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15A388D8-BA87-48A1-A1E3-D319212813C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

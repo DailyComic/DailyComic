@@ -107,9 +107,9 @@ namespace DailyComic.Integrations.Slack
             string RenderTags()
             {
                 List<string> tags = new List<string>();
-                foreach (string tag in comic.Tags)
+                foreach (var tag in comic.Tags)
                 {
-                    tags.Add($"<https://dilbert.com/search_results?terms={tag.Replace(" ", "+")}|#{tag}>");
+                    tags.Add($"<{tag.Url}|#{tag.Text}>");
                 }
                 return string.Join(", ", tags);
             }

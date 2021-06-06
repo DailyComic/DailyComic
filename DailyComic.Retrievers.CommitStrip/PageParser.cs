@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DailyComic.HtmlUtils;
 using DailyComic.Model;
 using HtmlAgilityPack;
 
@@ -34,25 +35,23 @@ namespace DailyComic.Retrievers.CommitStrip
 
         private void SetNextAndPreviousUrls(HtmlDocument document, ComicStrip comic)
         {
-            HtmlNode nextUrl = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("nav-next"))?.Descendants("a").FirstOrDefault();
-            comic.NextUrl =  nextUrl?.Attributes["href"]?.Value?.TrimStart('/');
-            HtmlNode prevUrl = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("nav-previous"))?.Descendants("a").FirstOrDefault();
-            comic.PreviousUrl = prevUrl?.Attributes["href"]?.Value?.TrimStart('/');
+            comic.NextUrl = document.FirstWithClass("nav-next")?.FirstHref();
+            comic.PreviousUrl = document.FirstWithClass("nav-previous")?.FirstHref();
         }
 
         private static string GetComicUrlFromTocPage(HtmlDocument document)
         {
-            HtmlNode container = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("excerpt"));
+            HtmlNode container = document.FirstWithClass("excerpt");
             
             if (container != null)
             {
-                var url = container.Descendants("a").FirstOrDefault();
+                var url = container.FirstHref();
                 if (url == null)
                 {
                     throw new InvalidOperationException("Comic TOC URL not found");
                 }
 
-                return url.Attributes["href"].Value;
+                return url;
             }
             else
             {
@@ -66,17 +65,17 @@ namespace DailyComic.Retrievers.CommitStrip
 
         private static ComicStrip GetComicStripFromContainer(HtmlDocument document)
         {
-            HtmlNode container = document.DocumentNode.Descendants("article").FirstOrDefault();
+            HtmlNode container = document.First("article");
 
             if (container != null)
             {
                 ComicStrip comic = new ComicStrip(ComicName.CommitStrip)
                 {
-                    Title = container.Descendants().FirstOrDefault(x=>x.HasClass("entry-title"))?.InnerText,
-                    PageUrl= container.Descendants().FirstOrDefault(x=>x.HasClass("entry-meta"))?.Descendants("a").FirstOrDefault()?.Attributes["href"]?.Value,
-                    ImageUrl = container.Descendants("img").FirstOrDefault()?.Attributes["src"].Value,
+                    Title = container.FirstWithClass("entry-title")?.InnerText?.Trim(),
+                    PageUrl= container.FirstWithClass("entry-meta").FirstHref(),
+                    ImageUrl = container.First("img").GetAttr("src"),
                     Author = "CommitStrip.com",
-                    Date = container.Descendants().FirstOrDefault(x => x.HasClass("entry-date"))?.InnerText,
+                    Date = container.FirstWithClass("entry-date")?.InnerText,
                 };
                 comic.ComicId = comic.PageUrl;
 

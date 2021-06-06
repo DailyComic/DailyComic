@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using DailyComic.HtmlUtils;
 using DailyComic.Model;
 using HtmlAgilityPack;
 
@@ -14,42 +16,88 @@ namespace DailyComic.Retrievers.MonkeyUser
             this.baseUrl = baseUrl;
         }
 
-        public ComicStrip Parse(string pageHtml)
+        public string ParseInitialPageAndGetRandomUrl(string pageHtml)
         {
             HtmlDocument document = new HtmlDocument();
             document.LoadHtml(pageHtml);
 
-            ComicStrip comic = GetComicStripFromContainer(document);
+            return GetComicUrlFromTocPage(document);
+        }
+
+        public ComicStrip Parse(string pageHtml, string finalUrl)
+        {
+            HtmlDocument document = new HtmlDocument();
+            document.LoadHtml(pageHtml);
+
+            ComicStrip comic = this.GetComicStripFromContainer(document, finalUrl);
 
             this.SetNextAndPreviousUrls(document, comic);
+            
+            this.SetTags(document, comic);
 
             return comic;
         }
 
         private void SetNextAndPreviousUrls(HtmlDocument document, ComicStrip comic)
         {
-            HtmlNode nextUrl = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("js-load-comic-newer"));
-            comic.NextUrl = this.baseUrl + nextUrl?.Attributes["href"]?.Value?.TrimStart('/');
-            HtmlNode prevUrl = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("js-load-comic-older"));
-            comic.PreviousUrl = this.baseUrl + prevUrl?.Attributes["href"]?.Value?.TrimStart('/');
+            string nextUrl = document.FirstWithClass("next")?.FirstHref();
+            comic.NextUrl =  UrlHelper.CombineUrls(baseUrl, nextUrl);
+            string prevUrl = document.FirstWithClass("prev")?.FirstHref();
+            comic.PreviousUrl =  UrlHelper.CombineUrls(baseUrl, prevUrl);
         }
 
-        private static ComicStrip GetComicStripFromContainer(HtmlDocument document)
+        private void SetTags(HtmlDocument document, ComicStrip comic)
         {
-            HtmlNode container = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("comic-item-container"));
+            IEnumerable<HtmlNode> tags = document.FirstWithClass("tags")?.DescendantsWithClass("tag");
 
-            if (container != null)
+            if (tags != null)
             {
-                ComicStrip comic = new ComicStrip(ComicName.Dilbert)
+                foreach (HtmlNode htmlNode in tags)
                 {
-                    ImageUrl = container.Attributes["data-image"]?.Value,
-                    Title = container.Attributes["data-title"]?.Value,
-                    PageUrl = container.Attributes["data-url"]?.Value,
-                    ComicId = container.Attributes["data-id"]?.Value,
-                    Author = container.Attributes["data-creator"]?.Value,
-                    Tags = container.Attributes["data-tags"]?.Value?.Split(","),
-                    Date = container.Attributes["data-date"]?.Value
+                    var tag = new Tag()
+                    {
+                        Text = htmlNode.InnerText.Trim(),
+                        Url = htmlNode.GetHref()
+                    };
+                    comic.Tags.Add(tag);
+                }
+            }
+        }
+
+        private static string GetComicUrlFromTocPage(HtmlDocument document)
+        {
+            var script = document.DocumentNode.Descendants("script").FirstOrDefault(x=>x.InnerHtml.Contains("posts.push("));
+            var matches = System.Text.RegularExpressions.Regex.Matches(script?.InnerHtml??"", "(posts\\.push\\(\")([^\"]+)");
+            
+            if (matches.Count > 0)
+            {
+                var rnd = new Random();
+                var match = matches.ElementAt(rnd.Next(0, matches.Count - 1));
+
+                return match.Groups[2].Value;
+            }
+            else
+            {
+                throw new InvalidOperationException("Comic random button not found");
+            }
+        }
+
+        private ComicStrip GetComicStripFromContainer(HtmlDocument document, string finalUrl)
+        {
+            HtmlNode container = document.FirstWithClass("post");
+            var img = container?.FirstWithClass("content")?.First("img");
+
+            if (img != null)
+            {
+                ComicStrip comic = new ComicStrip(ComicName.MonkeyUser)
+                {
+                    Title = img.Attributes["title"]?.Value,
+                    PageUrl= UrlHelper.CombineUrls(this.baseUrl, finalUrl),
+                    ImageUrl = img.Attributes["src"].Value,
+                    Author = "MonkeyUser.com",
+                    Date = container.First("time")?.InnerText,
                 };
+                comic.ComicId = comic.PageUrl;
 
                 if (string.IsNullOrEmpty(comic.ImageUrl))
                 {

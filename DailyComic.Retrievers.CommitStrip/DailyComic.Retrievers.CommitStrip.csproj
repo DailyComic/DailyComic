@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DailyComic.Contracts\DailyComic.Contracts.csproj" />
+    <ProjectReference Include="..\DailyComic.HtmlUtils\DailyComic.HtmlUtils.csproj" />
     <ProjectReference Include="..\DailyComic.Model\DailyComic.Model.csproj" />
   </ItemGroup>
 

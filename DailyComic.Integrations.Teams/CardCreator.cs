@@ -68,9 +68,9 @@ namespace DailyComic.Integrations.Teams
             string RenderTags(ComicStrip comic)
             {
                 List<string> tags = new List<string>();
-                foreach (string tag in comic.Tags)
+                foreach (Tag tag in comic.Tags)
                 {
-                    tags.Add($"[#{tag}](https://dilbert.com/search_results?terms={tag.Replace(" ", "+")})");
+                    tags.Add($"[#{tag.Text}]({tag.Url})");
                 }
                 return string.Join(", ", tags);
             }

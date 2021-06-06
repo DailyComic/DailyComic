@@ -26,7 +26,7 @@ namespace DailyComic.AzureFunctions
             this.subscriberProvider = subscriberProvider;
         }
 
-        [FunctionName("CommitStripRandom")]
+        [FunctionName("MonkeyUserRandom")]
         public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post", "get", Route = null)] HttpRequest req, ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");

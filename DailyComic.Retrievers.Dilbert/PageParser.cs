@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DailyComic.HtmlUtils;
 using DailyComic.Model;
 using HtmlAgilityPack;
 
@@ -28,28 +29,30 @@ namespace DailyComic.Retrievers.Dilbert
 
         private void SetNextAndPreviousUrls(HtmlDocument document, ComicStrip comic)
         {
-            HtmlNode nextUrl = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("js-load-comic-newer"));
-            comic.NextUrl = this.baseUrl + nextUrl?.Attributes["href"]?.Value?.TrimStart('/');
-            HtmlNode prevUrl = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("js-load-comic-older"));
-            comic.PreviousUrl = this.baseUrl + prevUrl?.Attributes["href"]?.Value?.TrimStart('/');
+            HtmlNode nextUrl = document.FirstWithClass("js-load-comic-newer");
+            comic.NextUrl = UrlHelper.CombineUrls(this.baseUrl, nextUrl.GetHref());
+            
+            HtmlNode prevUrl = document.FirstWithClass("js-load-comic-older");
+            comic.PreviousUrl= UrlHelper.CombineUrls(this.baseUrl, prevUrl.GetHref());
         }
 
         private static ComicStrip GetComicStripFromContainer(HtmlDocument document)
         {
-            HtmlNode container = document.DocumentNode.Descendants().FirstOrDefault(n => n.HasClass("comic-item-container"));
+            HtmlNode container = document.FirstWithClass("comic-item-container");
 
             if (container != null)
             {
                 ComicStrip comic = new ComicStrip(ComicName.Dilbert)
                 {
-                    ImageUrl = container.Attributes["data-image"]?.Value,
-                    Title = container.Attributes["data-title"]?.Value,
-                    PageUrl = container.Attributes["data-url"]?.Value,
-                    ComicId = container.Attributes["data-id"]?.Value,
-                    Author = container.Attributes["data-creator"]?.Value,
-                    Tags = container.Attributes["data-tags"]?.Value?.Split(","),
-                    Date = container.Attributes["data-date"]?.Value
+                    ImageUrl = container.GetAttr("data-image"),
+                    Title   = container.GetAttr("data-title"),
+                    PageUrl = container.GetAttr("data-url"),
+                    ComicId = container.GetAttr("data-id"),
+                    Author  = container.GetAttr("data-creator"),
+                    Date    = container.GetAttr("data-date")
                 };
+
+                SetTags(comic, container);
 
                 if (string.IsNullOrEmpty(comic.ImageUrl))
                 {
@@ -61,6 +64,23 @@ namespace DailyComic.Retrievers.Dilbert
             else
             {
                 throw new InvalidOperationException("Comic container not found");
+            }
+        }
+
+        private static void SetTags(ComicStrip comic, HtmlNode container)
+        {
+            string[] tags = container.GetAttr("data-tags")?.Split(",");
+            if (tags != null)
+            {
+                foreach (string tagText in tags)
+                {
+                    Tag tag = new Tag()
+                    {
+                        Text = tagText,
+                        Url = $"https://" + $"dilbert.com/search_results?terms={tagText.Replace(" ", "+")}"
+                    };
+                    comic.Tags.Add(tag);
+                }
             }
         }
     }
