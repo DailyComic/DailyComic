@@ -31,11 +31,12 @@ namespace DailyComic.Integrations.Slack
             {
                 foreach (ExtraButton inlineButton in inlineButtons)
                 {
-                    extraButtonsMarkdown += $" | [{inlineButton.Text}]({inlineButton.Url})";
+                    extraButtonsMarkdown += $" *|* {BuildLink(inlineButton.Text, inlineButton.Url)}";
                 }
 
-                extraButtonsMarkdown = " | " + extraButtonsMarkdown;
             }
+
+            extraButtonsMarkdown += RenderSenderInfo();
 
             card.Blocks.Add(new Block()
             {
@@ -45,11 +46,15 @@ namespace DailyComic.Integrations.Slack
                     new Text()
                     {
                         Type = Types.Markdown,
-                        TextText = $"<{comic.PageUrl}|See on {GetDomain(comic)} :arrow_upper_right:> | " +
-                                   GetNavigationButtons(comic) + extraButtonsMarkdown
+                        TextText = $"{BuildLink($"See on {GetDomain(comic)} :arrow_upper_right:", comic.PageUrl)} *|* " + GetNavigationButtons(comic) + extraButtonsMarkdown
                     }
                 }
             });
+        }
+
+        private string RenderSenderInfo()
+        {
+            return $" *|* *_Sent with 😀 by {BuildLink("DailyComic", DailyComicUrls.LandingPageUrl)}_* ";
         }
 
         private static void RenderTitle(ComicStrip comic, MessageCard card)
@@ -69,10 +74,15 @@ namespace DailyComic.Integrations.Slack
         {
             if (!string.IsNullOrEmpty(comic.PreviousUrl))
             {
-                return $"<{comic.PreviousUrl}|:arrow_left:> <{comic.NextUrl}|:arrow_right:>";
+                return  $"{BuildLink(":arrow_left:", comic.PreviousUrl)} {BuildLink(":arrow_right:", comic.NextUrl)}";
             }
 
             return "";
+        }
+
+        private string BuildLink(string text, string url)
+        {
+            return $"<{url}|{text}>";
         }
 
         protected virtual string GetDomain(ComicStrip comic)
@@ -115,19 +125,22 @@ namespace DailyComic.Integrations.Slack
                 card.Blocks.Add(new Block()
                 {
                     Type = Types.Context,
-                    Text = new Text()
+                    Elements = new List<Text>()
                     {
-                        Type = Types.Markdown,
-                        TextText = RenderTags(),
+                        new Text()
+                        {
+                            Type = Types.Markdown,
+                            TextText = RenderTags(),
+                        },
                     }
                 });
             }
             string RenderTags()
             {
                 List<string> tags = new List<string>();
-                foreach (var tag in comic.Tags)
+                foreach (Tag tag in comic.Tags)
                 {
-                    tags.Add($"<{tag.Url}|#{tag.Text}>");
+                    tags.Add($"{BuildLink($"#{tag.Text}", tag.Url)}");
                 }
                 return string.Join(", ", tags);
             }

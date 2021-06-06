@@ -28,19 +28,27 @@ namespace DailyComic.Integrations.Teams
                 Markdown = true,
                 ActivityTitle = $"{comic.Title}",
                 ActivitySubtitle = $"{comic.Date} | " +
-                                   $"[See on {GetDomain(comic)} ⬈]({comic.PageUrl}) | " +
-                                   $"[🡄]({comic.PreviousUrl}) [🡆]({comic.NextUrl})"
+                                   $"{BuildLink($"See on {GetDomain(comic)} ⬈", comic.PageUrl)} | " +
+                                   $"{BuildLink($"🡄", comic.PreviousUrl)} | {BuildLink($"🡆", comic.NextUrl)}" 
             };
             List<ExtraButton> inlineButtons = comic.ExtraButtons.Where(x => x.Location == ExtraButtonLocation.HeaderInline).ToList();
             if (inlineButtons.Any())
             {
                 foreach (ExtraButton inlineButton in inlineButtons)
                 {
-                    header.ActivitySubtitle += $" | [{inlineButton.Text}]({inlineButton.Url})";
+                    header.ActivitySubtitle += $" | {BuildLink(inlineButton.Text, inlineButton.Url)}";
                 }
             }
+
+            header.ActivitySubtitle += this.AddSenderInfo();
             card.Sections.Add(header);
         }
+
+        private string AddSenderInfo()
+        {
+           return $" **| _Sent with_** 😀 **_by {BuildLink("DailyComic", DailyComicUrls.LandingPageUrl)}_**";
+        }
+
 
         protected virtual string GetDomain(ComicStrip comic)
         {
@@ -60,7 +68,7 @@ namespace DailyComic.Integrations.Teams
             card.Sections.Add(new Section()
             {
                 Markdown = true,
-                Text = $"![{comic.Title}]({comic.ImageUrl})",
+                Text = $"![{comic.Title} (if comic is not visible, perhaps it's too 'large/heavy' for Teams, sorry)]({comic.ImageUrl})",
             });
         }
 
@@ -71,18 +79,23 @@ namespace DailyComic.Integrations.Teams
                 card.Sections.Add(new Section()
                 {
                     Markdown = true,
-                    Text = RenderTags(comic),
+                    Text = RenderTags() ,
                 });
             }
-            string RenderTags(ComicStrip comic)
+            string RenderTags()
             {
                 List<string> tags = new List<string>();
                 foreach (Tag tag in comic.Tags)
                 {
-                    tags.Add($"[#{tag.Text}]({tag.Url})");
+                    tags.Add($"{BuildLink($"#{tag.Text}", tag.Url)}");
                 }
                 return string.Join(", ", tags);
             }
+        }
+
+        private string BuildLink(string text, string url)
+        {
+            return $"[{text}]({url})";
         }
     }
 }
