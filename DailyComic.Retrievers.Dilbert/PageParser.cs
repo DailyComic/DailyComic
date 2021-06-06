@@ -24,7 +24,21 @@ namespace DailyComic.Retrievers.Dilbert
 
             this.SetNextAndPreviousUrls(document, comic);
 
+            this.AddBuyButton(comic);
+
             return comic;
+        }
+
+        private void AddBuyButton(ComicStrip comic)
+        {
+            var buyButton = new ExtraButton()
+            {
+                Text = "BUY",
+                Url = $"https://" + $"dilbert.com/buy?date={comic.ComicId}",
+                Location = ExtraButtonLocation.HeaderInline
+            };
+
+            comic.ExtraButtons.Add(buyButton);
         }
 
         private void SetNextAndPreviousUrls(HtmlDocument document, ComicStrip comic)

@@ -15,13 +15,12 @@ namespace DailyComic.Integrations.Teams
         {
             this.comic = comic;
             this.content = new Lazy<HttpContent>(this.GetContent);
-            this.cardCreator = CardCreatorFactory.Get(comic);
         }
 
         private readonly ComicStrip comic;
         private readonly HttpClient client = new HttpClient();
         private readonly Lazy<HttpContent> content;
-        private readonly IMessageCardCreator cardCreator;
+        private readonly IMessageCardCreator cardCreator = new CardCreator();
 
         public async Task<ComicDeliveryResult> SendComicTo(SubscriptionSettings settings)
         {

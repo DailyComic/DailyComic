@@ -35,7 +35,20 @@ namespace DailyComic.Retrievers.MonkeyUser
             
             this.SetTags(document, comic);
 
+            this.SetBuyButton(comic);
+
             return comic;
+        }
+
+        private void SetBuyButton(ComicStrip comic)
+        {
+            comic.ExtraButtons.Add(new ExtraButton()
+            {
+                Location = ExtraButtonLocation.HeaderInline,
+                Text = "BUY PLUSHIES",
+                Url = "https://store.monkeyuser.com/"
+            });
+
         }
 
         private void SetNextAndPreviousUrls(HtmlDocument document, ComicStrip comic)

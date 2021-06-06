@@ -12,6 +12,8 @@ namespace DailyComic.Integrations.Slack
         {
             MessageCard card = new MessageCard();
 
+            RenderTitle(comic, card);
+
             RenderHeader(comic, card);
 
             RenderImageSection(comic, card);
@@ -23,15 +25,18 @@ namespace DailyComic.Integrations.Slack
 
         protected virtual void RenderHeader(ComicStrip comic, MessageCard card)
         {
-            card.Blocks.Add(new Block()
+            string extraButtonsMarkdown = "";
+            List<ExtraButton> inlineButtons = comic.ExtraButtons.Where(x => x.Location == ExtraButtonLocation.HeaderInline).ToList();
+            if (inlineButtons.Any())
             {
-                Type = Types.Header,
-                Text = new Text()
+                foreach (ExtraButton inlineButton in inlineButtons)
                 {
-                    TextText = $"{comic.Title}",
-                    Type = Types.PlainText
+                    extraButtonsMarkdown += $" | [{inlineButton.Text}]({inlineButton.Url})";
                 }
-            });
+
+                extraButtonsMarkdown = " | " + extraButtonsMarkdown;
+            }
+
             card.Blocks.Add(new Block()
             {
                 Type = Types.Context,
@@ -40,9 +45,22 @@ namespace DailyComic.Integrations.Slack
                     new Text()
                     {
                         Type = Types.Markdown,
-                        TextText= $"<{comic.PageUrl}|See on {GetDomain(comic)} :arrow_upper_right:> | " +
-                        GetNavigationButtons(comic)
+                        TextText = $"<{comic.PageUrl}|See on {GetDomain(comic)} :arrow_upper_right:> | " +
+                                   GetNavigationButtons(comic) + extraButtonsMarkdown
                     }
+                }
+            });
+        }
+
+        private static void RenderTitle(ComicStrip comic, MessageCard card)
+        {
+            card.Blocks.Add(new Block()
+            {
+                Type = Types.Header,
+                Text = new Text()
+                {
+                    TextText = $"{comic.Title}",
+                    Type = Types.PlainText
                 }
             });
         }

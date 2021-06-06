@@ -23,21 +23,30 @@ namespace DailyComic.Integrations.Teams
 
         protected virtual void RenderHeader(ComicStrip comic, MessageCard card)
         {
-            card.Sections.Add(new Section()
+            Section header = new Section()
             {
                 Markdown = true,
                 ActivityTitle = $"{comic.Title}",
                 ActivitySubtitle = $"{comic.Date} | " +
                                    $"[See on {GetDomain(comic)} ⬈]({comic.PageUrl}) | " +
                                    $"[🡄]({comic.PreviousUrl}) [🡆]({comic.NextUrl})"
-            });
+            };
+            List<ExtraButton> inlineButtons = comic.ExtraButtons.Where(x => x.Location == ExtraButtonLocation.HeaderInline).ToList();
+            if (inlineButtons.Any())
+            {
+                foreach (ExtraButton inlineButton in inlineButtons)
+                {
+                    header.ActivitySubtitle += $" | [{inlineButton.Text}]({inlineButton.Url})";
+                }
+            }
+            card.Sections.Add(header);
         }
 
         protected virtual string GetDomain(ComicStrip comic)
         {
             try
             {
-                var uri = new Uri(comic.PageUrl);
+                Uri uri = new Uri(comic.PageUrl);
                 return $"{uri.Host}";
             }
             catch (Exception)

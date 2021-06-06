@@ -6,13 +6,11 @@ namespace DailyComic.Model
 {
     public class ComicStrip
     {
-        public ComicName ComicName { get; }
-
         public ComicStrip(ComicName comicName)
         {
             ComicName = comicName;
         }
-
+        public ComicName ComicName { get; }
         public string PageUrl { get; set; }
         public string NextUrl { get; set; }
         public string PreviousUrl { get; set; }
@@ -22,5 +20,7 @@ namespace DailyComic.Model
         public string Author { get; set; }
         public string Date { get; set; }
         public string ComicId { get; set; }
+        public List<ExtraButton> ExtraButtons { get; set; } = new List<ExtraButton>();
+
     }
 }
