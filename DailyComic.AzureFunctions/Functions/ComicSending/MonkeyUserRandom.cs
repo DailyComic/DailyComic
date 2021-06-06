@@ -27,7 +27,7 @@ namespace DailyComic.AzureFunctions
         }
 
         [FunctionName("MonkeyUserRandom")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post", "get", Route = null)] HttpRequest req, ILogger log)
+        public async Task<IActionResult> Run([TimerTrigger("0 7 * * 1-5")] TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
