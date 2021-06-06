@@ -16,6 +16,7 @@
     <ProjectReference Include="..\DailyComic.Integrations.Teams\DailyComic.Integrations.Teams.csproj" />
     <ProjectReference Include="..\DailyComic.Retrievers.CommitStrip\DailyComic.Retrievers.CommitStrip.csproj" />
     <ProjectReference Include="..\DailyComic.Retrievers.Dilbert\DailyComic.Retrievers.Dilbert.csproj" />
+    <ProjectReference Include="..\DailyComic.Retrievers.MonkeyUser\DailyComic.Retrievers.MonkeyUser.csproj" />
     <ProjectReference Include="..\DailyComic.Subscriptions.AzureStorage\DailyComic.Subscriptions.AzureStorage.csproj" />
   </ItemGroup>
   <ItemGroup>

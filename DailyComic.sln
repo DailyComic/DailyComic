@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComicRetrievers", "ComicRet
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integrations", "Integrations", "{21CB092F-D3A2-4710-89C8-A82D9AAF3563}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyComic.Retrievers.MonkeyUser", "DailyComic.Retrievers.MonkeyUser\DailyComic.Retrievers.MonkeyUser.csproj", "{8EF0E2BD-4450-4E17-A800-E89FC8BE5DA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{1A9A00DA-6B4D-4CAA-9CA4-EFA060B4FABD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A9A00DA-6B4D-4CAA-9CA4-EFA060B4FABD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A9A00DA-6B4D-4CAA-9CA4-EFA060B4FABD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EF0E2BD-4450-4E17-A800-E89FC8BE5DA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EF0E2BD-4450-4E17-A800-E89FC8BE5DA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EF0E2BD-4450-4E17-A800-E89FC8BE5DA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EF0E2BD-4450-4E17-A800-E89FC8BE5DA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{8E455BDE-8EDD-48CE-B8CD-EFA1903086D6} = {21CB092F-D3A2-4710-89C8-A82D9AAF3563}
 		{6FCBFA9E-002B-4FD7-A045-1B048433C13B} = {FE575BDB-FA6C-4DD7-B85E-ACDDBEBE71B8}
 		{1A9A00DA-6B4D-4CAA-9CA4-EFA060B4FABD} = {FE575BDB-FA6C-4DD7-B85E-ACDDBEBE71B8}
+		{8EF0E2BD-4450-4E17-A800-E89FC8BE5DA0} = {FE575BDB-FA6C-4DD7-B85E-ACDDBEBE71B8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B77E8477-4E89-423A-8F86-8353CFF3CACA}
