@@ -27,7 +27,7 @@ namespace DailyComic.AzureFunctions
         }
 
         [FunctionName("CommitStripRandom")]
-        public async Task<IActionResult> Run([TimerTrigger("0 12 * * 1-5")] TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("0 12 * * 1-5")] TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
@@ -37,8 +37,6 @@ namespace DailyComic.AzureFunctions
 
             ComicSendingController sendingController = new ComicSendingController(comic);
             await sendingController.Push(subscriptions);
-
-            return new OkResult();
         }
     }
 }

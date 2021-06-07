@@ -27,7 +27,7 @@ namespace DailyComic.AzureFunctions
         }
 
         [FunctionName("MonkeyUserRandom")]
-        public async Task<IActionResult> Run([TimerTrigger("0 0 7 * * 1-5")] TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("0 0 7 * * 1-5")] TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"{this.GetType().Name} - Starting function execution");
 
@@ -37,8 +37,6 @@ namespace DailyComic.AzureFunctions
 
             ComicSendingController sendingController = new ComicSendingController(comic);
             await sendingController.Push(subscriptions);
-
-            return new OkResult();
         }
     }
 }
