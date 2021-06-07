@@ -27,7 +27,7 @@ namespace DailyComic.AzureFunctions
         }
 
         [FunctionName("RandomDilbert")]
-        public async Task Run([TimerTrigger("0 9 * * 1-5")] TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("0 0 9 * * 1-5")] TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
