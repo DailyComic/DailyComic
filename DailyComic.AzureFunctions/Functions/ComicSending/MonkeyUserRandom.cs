@@ -29,7 +29,7 @@ namespace DailyComic.AzureFunctions
         [FunctionName("MonkeyUserRandom")]
         public async Task<IActionResult> Run([TimerTrigger("0 0 7 * * 1-5")] TimerInfo myTimer, ILogger log)
         {
-            log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+            log.LogInformation($"{this.GetType().Name} - Starting function execution");
 
             ComicStrip comic = await this.retriever.GetComic();
 
