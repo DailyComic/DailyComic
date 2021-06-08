@@ -30,7 +30,19 @@ namespace DailyComic.Retrievers.CommitStrip
 
             this.SetNextAndPreviousUrls(document, comic);
 
+            this.AddBookUrl(comic);
+
             return comic;
+        }
+
+        private void AddBookUrl(ComicStrip comic)
+        {
+            comic.ExtraButtons.Add(new ExtraButton()
+            {
+                Location = ExtraButtonLocation.HeaderInline,
+                Text = "BUY OUR BOOK",
+                Url = "https://www.kickstarter.com/projects/commitstrip/commitstrip-the-summer-of-code-a-book-about-love?ref=card"
+            });
         }
 
         private void SetNextAndPreviousUrls(HtmlDocument document, ComicStrip comic)
